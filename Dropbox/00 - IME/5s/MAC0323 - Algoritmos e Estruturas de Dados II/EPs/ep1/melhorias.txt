@@ -1,0 +1,2 @@
+- parece estar contando espaços como palavras em alguns casos
+- Skye's -> Skyes --> Não deveria

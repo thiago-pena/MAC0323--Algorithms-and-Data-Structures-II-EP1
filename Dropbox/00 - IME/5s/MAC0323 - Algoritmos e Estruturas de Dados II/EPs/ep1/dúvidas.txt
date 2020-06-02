@@ -1,0 +1,8 @@
+- pode usar Regex?
+- o que "Chave seleciona(int k)" faz?
+- podemos usar lazy deletion em vetores?
+
+- definir comportamento quando o elemento não existe ainda
+    Item devolve (Chave chave);
+    int rank (Chave chave);
+        -> rank faz sentido para ED desordenadas?

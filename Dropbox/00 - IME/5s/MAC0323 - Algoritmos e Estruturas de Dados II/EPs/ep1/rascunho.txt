@@ -1,0 +1,34 @@
+Operadores
+    void insere (Chave, chave, Item valor);
+    Item devolve (Chave chave);
+    void remove (Chave chave);
+    int rank (Chave chave);
+    Chave seleciona(int k);
+
+Estruturas de dados:
+    vetor desordenado;
+    vetor ordenado;
+    lista ligada desordenada;
+    lista ligada ordenada;
+    árvore de busca binária gerada na ordem da entrada;
+    treaps;
+    árvores 2-3;
+    árvores rubro-negras;
+    tabelas de hashing
+
+Nome padronizado das classes
+    Vetor desordenado:   vetorDes
+    Vetor ordenado:   vetorOrd
+    Lista ligada desordenada:   listaDes
+    Lista ligada ordenada:   listaOrd
+    Árvore Binária:   arvoreBin
+    Treaps:   treap
+    Árvore 2-3:   arvore23
+    Árvore Rubro-Negra:   arvoreRN
+    Hashing Table:   hashTable
+---------------------------------------------------------------------------------------------------
+Para fazer seus testes, você deverá implementar uma tabela de sı́mbolos para calcular a frequência
+que ocorrem palavras em um texto muito grande. Assim, o programa deverá receber na linha de
+comando o nome de um arquivo de entrada (em formato UTF 8) e construir uma tabela de sı́mbolos
+com as palavras deste texto.
+---------------------------------------------------------------------------------------------------
