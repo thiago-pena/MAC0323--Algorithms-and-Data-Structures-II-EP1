@@ -13,6 +13,7 @@
 #include "arvoreBin.hpp"
 #include "treap.hpp"
 #include "arvore23.hpp"
+#include "arvoreRN.hpp"
 using namespace std;
 
 #define NULLITEM -1
@@ -27,7 +28,7 @@ int main() {
     //listaDes<string, int> st(NULLITEM);
     //listaDes<string, int> st;
     //listaOrd<string, int> st(NULLITEM);
-    arvore23<string, int> st(NULLITEM);
+    arvoreRN<string, int> st(NULLITEM);
 
     string p;
     while (f >> p) {
@@ -59,7 +60,7 @@ int main() {
 
     cout << endl;
 
-    cout << st.devolve("a") << endl; // Não tem
+    cout << st.devolve("a") << endl; // 4
     cout << st.devolve("b") << endl; // Não tem
     cout << st.devolve("c") << endl; // Não tem
     f.close();

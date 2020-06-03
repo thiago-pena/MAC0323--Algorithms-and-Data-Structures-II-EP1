@@ -70,15 +70,12 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::insereR(No *node, Cha
             p = p->esq;
         else if (chave < p->chave && p->esq == nullptr)
             achou = true;
-        else if (chave < p->chave && p->esq != nullptr)
+        else if (chave > p->chave && p->dir != nullptr)
             p = p->dir;
-        else if (chave < p->chave && p->esq == nullptr)
+        else if (chave > p->chave && p->dir == nullptr)
             achou = true;
         else achou = true; // ch == p->chave
     }
-
-    cout << "\tinsereR | achou p (folha): " << p->chave << endl;
-    cout << "\t\tinsereR() | cor p: " << p->getCor() << endl;
 
     if (chave == p->chave) {
         p->valor = valor;
@@ -87,72 +84,62 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::insereR(No *node, Cha
 
     No *novo = new No(chave, valor);
     novo->pai = p;
-    cout << "\t\tinsereR() | cria novo Nó: " << novo->chave << endl;
-    cout << "\t\tinsereR() | Teste p: " << p->chave << endl;
 
     // by Pena
-    if (chave < p->chave) {
+    if (chave < p->chave)
         p->esq = novo;
-        cout << "\t\tinsereR() | esq" << p->esq->chave << ", " << p->esq->valor << endl;
-    }
-    else {
+    else
         p->dir = novo;
-        cout << "\t\tinsereR() | dir: " << p->dir->chave << ", " << p->dir->valor  << endl;
-    }
     // by Pena (fim)
-    cout << "\tFase Upward" << endl;
 
     No *filho = novo;
-    while (p != nullptr) { // Upward -> sobe arrumando
-        cout << "\t\tFase Upward 1" << endl;
+    while (p != nullptr) { // Upward -> sobe arrumando (no final ajusta 'p' e 'filho' e vai subindo)
         // p é pai de um nó vermelho
-        if (p->cor == 1) { // se p é preto, está correto
-            cout << "\t\tp é preto -> OK" << endl;
+        if (p->cor == 1) // se p é preto, está correto
             break;
-        }
-        cout << "\t\tp é vermelho..." << endl;
         No *avo = p->pai;
         if (avo == nullptr) { // p é raiz da árvore
-            cout << "\t\tNão tem avô... p é raiz: vermelho -> preto" << endl;
             p->cor = 1;
-            cout << "\t\t\tTeste p: " << p->chave << endl;
-            cout << "\t\t\tTeste raiz: " << raiz->chave << endl;
             break;
         }
-        cout << "\t\tteste..." << endl;
 
-        //No *tio = // outro filho do avô
-
-        No *tio;
-        if (avo->esq == p) {
+        No *tio; // outro filho do avô
+        if (avo->esq == p)
             tio = avo->dir;
-        }
-        else if (avo->dir = p) {
+        else if (avo->dir = p)
             tio = avo->esq;
-        }
 
 
-
-        if (tio->cor == 0) {
-            avo->cor = 0;
-            p->cor = tio->cor = 1;
-            p = avo->pai;
+        if (tio != nullptr && tio->cor == 0) { // pai vermelho => avô preto
+            avo->cor = 0; // avô: preto -> vermelho
+            p->cor = tio->cor = 1; // pai, tio: preto -> vermelho
+            p = avo->pai; // sobe para o pai do avô [novo p no loop]
             filho = avo;
         }
         else { // Tio preto (ou nullptr)
-            if (p->dir == filho && avo->esq == p) {
+            if (p->dir == filho && avo->esq == p) { // precisa alinhar
                 p->dir = filho->esq;
                 if (filho->esq != nullptr) filho->esq->pai = p;
                 filho->esq = p;
                 p->pai = filho;
                 filho->pai = avo;
                 avo->esq = filho;
-                //p->dir->pai = p; //checar se precisa (prof não colocou)
                 p = filho;
                 filho = filho->esq;
             }
+            else if (p->esq == filho && avo->dir == p) { // precisa alinhar (caso 2)
+                p->esq = filho->dir;
+                if (filho->dir != nullptr) filho->dir->pai = p;
+                filho->dir = p;
+                p->pai = filho;
+                filho->pai = avo;
+                avo->dir = filho;
+                p = filho;
+                filho = filho->dir;
+            }
             if (p == avo->esq && filho == p->esq) { // os 2 do mesmo lado
                 avo->esq = p->dir;
+
                 if (p->dir != nullptr)
                     p->dir->pai = avo;
                 p->dir = avo;
@@ -162,13 +149,38 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::insereR(No *node, Cha
                 avo->cor = 0;
                 if (avo == raiz)
                     raiz = p;
+                if (p->pai != nullptr) { // acerta o ponteiro do pai do avô para p
+                    if (p->pai->esq == avo)
+                        p->pai->esq = p;
+                    else if (p->pai->dir == avo)
+                        p->pai->dir = p;
+                }
+                break;
+            }
+            else if (p == avo->dir && filho == p->dir) { // os 2 do mesmo lado (outro caso)
+                avo->dir = p->esq;
+                if (p->esq != nullptr)
+                    p->esq->pai = avo;
+                p->esq = avo;
+                p->pai = avo->pai;
+                avo->pai = p;
+                p->cor = 1;
+                avo->cor = 0;
+                if (avo == raiz)
+                    raiz = p;
+                if (p->pai != nullptr) { // acerta o ponteiro do pai do avô para p
+                    if (p->pai->esq == avo)
+                        p->pai->esq = p;
+                    else if (p->pai->dir == avo)
+                        p->pai->dir = p;
+                }
+
                 break;
             }
 
         }
 
     }
-    cout << "\tfim insereR" << endl;
     return raiz; // @@@ precisa mesmo? Posso fazer retornar void e não ajustar a raiz na insere, ou até remover a insere
 }
 
@@ -179,18 +191,10 @@ Item arvoreRN<Chave, Item>::devolve(Chave chave) {
 
 template <class Chave, class Item>
 Item arvoreRN<Chave, Item>::devolveR(No *raiz, Chave chave) {
-    if (raiz == nullptr) {
-        cout << "\t\tdevolveR: raiz é NULL" << endl;
+    if (raiz == nullptr)
         return nullItem;
-    }
-    cout << "\t\tdevolveR: raiz não é NULL" << endl;
-    cout << "\t\tdevolveR raiz:" << raiz->chave << endl;
-
-
-    if (chave == raiz->chave) {
-        cout << "\tdevolveR() | cor: " << raiz->getCor() << endl;
+    if (chave == raiz->chave)
         return raiz->valor;
-    }
     if (chave < raiz->chave)
         return devolveR(raiz->esq, chave);
     return devolveR(raiz->dir, chave);
@@ -238,47 +242,6 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::max(No *node) {
     return max(node->dir);
 }
 
-
-///////////////////// Arvore BIN
-
-
-
-// value paired with key ( null if key is absent)
-
-
-// template <class Chave, class Item>
-// void arvoreRN<Chave, Item>::remove(Chave chave) {
-//     raiz = removeR(raiz, chave);
-// }
-//
-// template <class Chave, class Item>
-// typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeR(No *node, Chave chave) {
-//     if (node == nullptr) return nullptr;
-//     if (chave < node->chave)
-//         node->esq = removeR(node->esq, chave);
-//     else if (chave > node->chave)
-//         node->dir = removeR(node->dir, chave);
-//     else {
-//         if (node->esq == nullptr) {
-//             No * aux = node->dir;
-//             delete node;
-//             return aux;
-//         }
-//         else if (node->dir == nullptr) {
-//             No * aux = node->esq;
-//             delete node;
-//             return aux;
-//         }
-//         else {
-//             No * aux = max(node->esq);
-//             node->chave = aux->chave;
-//             node->valor = aux->valor;
-//             raiz->esq = removeR(node->esq, aux->chave);
-//         }
-//     }
-//     return node;
-// }
-
 template <class Chave, class Item>
 void arvoreRN<Chave, Item>::print() {
     printR(raiz);
@@ -287,8 +250,8 @@ void arvoreRN<Chave, Item>::print() {
 template <class Chave, class Item>
 void arvoreRN<Chave, Item>::printR(No *node) {
     if (node != nullptr) {
-        printR(node->esq);
         cout << node->chave << ": " << node->valor << "(" << node->getCor() << ")" << endl;
+        printR(node->esq);
         printR(node->dir);
     }
 }
