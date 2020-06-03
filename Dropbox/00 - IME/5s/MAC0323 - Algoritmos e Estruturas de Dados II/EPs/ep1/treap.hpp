@@ -180,7 +180,7 @@ typename treap<Chave, Item>::No* treap<Chave, Item>::removeR(No *node, Chave cha
             No * aux = max(node->esq);
             node->chave = aux->chave;
             node->valor = aux->valor;
-            raiz->esq = removeR(node->esq, aux->chave);
+            node->esq = removeR(node->esq, aux->chave);
         }
     }
     return node;

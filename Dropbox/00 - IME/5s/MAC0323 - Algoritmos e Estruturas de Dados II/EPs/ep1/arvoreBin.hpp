@@ -148,7 +148,7 @@ typename arvoreBin<Chave, Item>::No* arvoreBin<Chave, Item>::removeR(No *node, C
             No * aux = max(node->esq);
             node->chave = aux->chave;
             node->valor = aux->valor;
-            raiz->esq = removeR(node->esq, aux->chave);
+            node->esq = removeR(node->esq, aux->chave);
         }
     }
     return node;
