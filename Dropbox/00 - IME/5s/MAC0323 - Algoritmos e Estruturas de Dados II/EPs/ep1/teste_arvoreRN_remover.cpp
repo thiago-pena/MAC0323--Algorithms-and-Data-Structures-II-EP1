@@ -51,20 +51,33 @@ int main() {
     // st.insere("45", 1);
 
     // Teste
+    st.insere("50", 1);
     st.insere("30", 1);
-    st.insere("25", 1);
+    st.insere("80", 1);
+    st.insere("70", 1); // Caso 2.3 (spV)
+    st.insere("20", 1);
     st.insere("40", 1);
+    st.insere("90", 1);
+    st.insere("45", 1);
     st.insere("35", 1);
-    st.remove("35");
+    st.insere("47", 1);
+    st.remove("40");
+
+
+
+    // st.remove("70");
+    // st.remove("30");
+    // st.insere("90", 1);
+
+    st.remove("20");
 
     cout << "-------------------------" << endl;
     cout << "PRINT" << endl;
     st.print();
     cout << "-------------------------" << endl;
 
-
-    cout << "Remove 40" << endl;
-    st.remove("40");
+    cout << "REMOVE 30" << endl;
+    st.remove("30");
 
     cout << "-------------------------" << endl;
     cout << "PRINT" << endl;
