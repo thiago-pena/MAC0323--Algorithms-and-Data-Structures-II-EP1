@@ -5,12 +5,11 @@ template <class Chave, class Item>
 class arvore23 {
     public:
         arvore23(Item nullItem);
-        //bool contains(Chave chave);
         void insere(Chave chave, Item valor);
-        Item devolve(Chave chave); // value paired with key ( null if key is absent)
+        Item devolve(Chave chave);
         void remove (Chave chave);
-        int rank(Chave chave); // find the number of keys less than a given key
-        Chave seleciona(int k); // find the key with a given rank
+        int rank(Chave chave);
+        Chave seleciona(int k);
         void print();
         void printPre();
 
@@ -34,8 +33,6 @@ class arvore23 {
             bool ehFolha() {
                 return ap1 == nullptr;
             }
-            // bool ehFolha
-            // -> basta olhar para o 1º apontador, se for null, é folha (todos os nós null de uma árvore 2-3 estão no mesmo nível)
         };
         No *raiz;
         Item nullItem;
@@ -933,7 +930,6 @@ void arvore23<Chave, Item>::printRpre(No *node) {
     }
 }
 
-// find the key with a given rank -> pré-ordem
 template <class Chave, class Item>
 Chave arvore23<Chave, Item>::seleciona(int k) {
     bool achou = false;
@@ -954,7 +950,7 @@ int arvore23<Chave, Item>::selecionaR(No *node, int k, bool &achou, Chave &chave
     if (++count == k + 1) {
         achou = true;
         chave = node->chave1;
-        return -30;
+        return count;
     }
     count = selecionaR(node->ap2, k, achou, chave, count);
     if (node->doisNo) return count;

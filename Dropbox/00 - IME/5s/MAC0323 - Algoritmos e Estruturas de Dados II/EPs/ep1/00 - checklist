@@ -1,0 +1,62 @@
+Vetor desordenado:   vetorDes
+    insere
+    devolve
+    remove
+    rank
+    seleciona
+
+Vetor ordenado:   vetorOrd
+    insere
+    devolve
+    remove
+    rank
+    seleciona
+
+Lista ligada desordenada:   listaDes
+    insere
+    devolve
+    remove
+    rank
+    seleciona
+
+Lista ligada ordenada:   listaOrd
+    insere
+    devolve
+    remove
+    rank
+    seleciona
+
+Árvore Binária:   arvoreBin
+    insere
+    devolve
+    remove
+    rank
+    seleciona
+
+Treaps:   treap
+    insere
+    devolve
+    remove
+    rank
+    seleciona
+
+Árvore 2-3:   arvore23
+    insere
+    devolve
+    remove
+    rank
+    seleciona
+
+Árvore Rubro-Negra:   arvoreRN
+    insere
+    devolve
+    remove
+    rank
+    seleciona
+
+Hashing Table:   hashTable
+        insere
+        devolve
+        remove
+        rank
+        seleciona

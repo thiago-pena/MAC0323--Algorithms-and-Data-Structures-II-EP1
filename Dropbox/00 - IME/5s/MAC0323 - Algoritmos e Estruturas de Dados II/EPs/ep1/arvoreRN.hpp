@@ -10,10 +10,10 @@ class arvoreRN {
         arvoreRN(Item nullItem);
         bool contains(Chave chave);
         void insere(Chave chave, Item valor);
-        Item devolve(Chave chave); // value paired with key ( null if key is absent)
+        Item devolve(Chave chave);
         void remove (Chave chave);
-        int rank(Chave chave); // find the number of keys less than a given key
-        Chave seleciona(int k); // find the key with a given rank -> pré-ordem
+        int rank(Chave chave);
+        Chave seleciona(int k);
         void print();
     private:
         struct No {
@@ -23,7 +23,6 @@ class arvoreRN {
             No *esq;
             int cor; // 0 -> vermelho, 1 -> preto, 2 -> duplo preto
             No *pai;
-            //int N;          // # nodes in subtree rooted here
             No(Chave ch, Item val) {
                 chave = ch;
                 valor = val;
@@ -405,10 +404,6 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
     }
 
     // Fase de subida
-
-        // verificar se é duplo preto e corrigir
-            // raiz
-            // não raiz
     while (p != nullptr) {
         if (p->cor < 2)
             return node;
@@ -647,7 +642,6 @@ void arvoreRN<Chave, Item>::printR(No *node) {
     }
 }
 
-// find the key with a given rank -> pré-ordem
 template <class Chave, class Item>
 Chave arvoreRN<Chave, Item>::seleciona(int k) {
     bool achou = false;
@@ -658,7 +652,6 @@ Chave arvoreRN<Chave, Item>::seleciona(int k) {
     return "Erro! Rank não encontrado.";
 }
 
-// in ordem
 template <class Chave, class Item>
 int arvoreRN<Chave, Item>::selecionaR(No *node, int k, bool &achou, Chave &chave, int count) {
     if (node == nullptr)

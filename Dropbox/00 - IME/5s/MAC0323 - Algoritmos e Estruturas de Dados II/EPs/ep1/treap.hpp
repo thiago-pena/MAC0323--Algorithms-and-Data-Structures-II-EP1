@@ -1,9 +1,14 @@
 #ifndef ARVOREBIN3_HPP
 #define ARVOREBIN3_HPP
 #include<limits.h>
-#include "prob.hpp"
+#include <stdlib.h>
+#include <string>
+using namespace std;
 
 #define MAXHEIGHT 1000000
+
+int randInteger(int a, int b);
+double randProb();
 
 template <class Chave, class Item>
 class treap {
@@ -11,10 +16,10 @@ class treap {
         treap(Item nullItem);
         bool contains(Chave chave);
         void insere(Chave chave, Item valor);
-        Item devolve(Chave chave); // value paired with key ( null if key is absent)
+        Item devolve(Chave chave);
         void remove (Chave chave);
-        int rank(Chave chave); // find the number of keys less than a given key
-        Chave seleciona(int k); // find the key with a given rank
+        int rank(Chave chave);
+        Chave seleciona(int k);
         void print();
     private:
         struct No {
@@ -200,7 +205,6 @@ void treap<Chave, Item>::printR(No *node) {
     }
 }
 
-// find the key with a given rank -> pré-ordem
 template <class Chave, class Item>
 Chave treap<Chave, Item>::seleciona(int k) {
     bool achou = false;
@@ -227,5 +231,24 @@ int treap<Chave, Item>::selecionaR(No *node, int k, bool &achou, Chave &chave, i
     return count;
 }
 
+// A função randomInteger devolve um inteiro
+// aleatório entre low e high inclusive,
+// ou seja, no intervalo fechado low..high.
+// Vamos supor que low <= high e que
+// high - low <= RAND_MAX. (O código foi copiado
+// da biblioteca random de Eric Roberts.)
+int randInteger(int a, int b) {
+    double d = (double) rand() / ((double) RAND_MAX + 1);
+    // 0 <= d < 1
+    int k = d * (b - a + 1); // 0 <= k <= b-a
+    return a + k;
+}
+
+// A função randProb() devolve uma probabilidade aleatória entre 0 e 1.
+double randProb() {
+   double r;
+   r = rand() / ((double) RAND_MAX);
+   return r;
+}
 
 #endif

@@ -27,7 +27,8 @@ int main() {
     //listaDes<string, int> st(NULLITEM);
     //listaDes<string, int> st;
     //listaOrd<string, int> st(NULLITEM);
-    arvore23<string, int> st(NULLITEM);
+    treap<string, int> st(NULLITEM);
+    //arvore23<string, int> st(NULLITEM);
 
     string p;
     while (f >> p) {

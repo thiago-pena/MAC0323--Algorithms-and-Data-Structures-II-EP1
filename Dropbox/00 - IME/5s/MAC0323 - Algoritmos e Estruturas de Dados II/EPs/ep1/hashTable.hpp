@@ -8,26 +8,18 @@ bool isPrime(int n);
 
 class hashTable {
     public:
-        hashTable(int tam);
-        bool contains(string chave);
+        hashTable(int tam = INITIALPRIME);
         void insere(string chave, int valor);
-        int devolve(string chave); // value paired with key ( null if key is absent)
-        //void remove (string chave);
-        //int rank(string chave); // find the number of keys less than a given key
-        //string seleciona(int k); // find the key with a given rank -> pré-ordem
+        int devolve(string chave);
+        void remove(string chave);
+        int rank(string chave);
+        string seleciona(int k);
 
     private:
         struct par {
             string chave;
             int valor;
-            bool ocupado;
-            bool blabla;
-            // par(string ch, int val) {
-            //     chave = ch;
-            //     valor = val;
-            //     ocupado  = true;
-            //     blabla = false;
-            // }
+            bool usado;
         };
         par *st;
         int N;
@@ -36,12 +28,11 @@ class hashTable {
         void resize(int);
 };
 
-// arvoreBin<Chave, Item>::arvoreBin(Item nullItem): raiz(nullptr), nullItem(nullItem){};
-// template <class Chave, class Item>
-
 hashTable::hashTable(int tam): st(new par[tam]), N(0), M(tam) {
-    for (int i = 0; i < M; i++)
+    for (int i = 0; i < M; i++) {
         st[i].chave = NULLKEY;
+        st[i].usado = false;
+    }
 }
 
 int hashTable::hash(string s) {
@@ -54,28 +45,28 @@ int hashTable::hash(string s) {
 void hashTable::insere(string chave, int valor) {
     if (N >= M/2) resize(nextPrime(M));
     int i;
-    cout << "insere: " << chave << " / hash: " << hash(chave) << " / N: " << N << " (M: " << M << ")" << endl;
-    for (i = hash(chave); st[i].chave != NULLKEY; i = (i + 1) % M)
+    for (i = hash(chave); st[i].chave != NULLKEY; i = (i + 1) % M) // chave já existe na ST
         if (chave == st[i].chave) {
             st[i].valor = valor;
             return;
         }
+    // chave nova
     st[i].chave = chave;
     st[i].valor = valor;
+    st[i].usado = true;
     N++;
 }
 
 int hashTable::devolve(string chave) {
-    for (int i = hash(chave); st[i].chave != NULLKEY; i = (i + 1) % M)
+    for (int i = hash(chave); st[i].usado; i = (i + 1) % M)
         if (chave == st[i].chave)
             return st[i].valor;
     return -1;
 }
 
 void hashTable::resize(int cap) {
-    cout << "RESIZE!\n";
     hashTable temp(cap);
-    for (int i = 0; i < M; i++) {
+    for (int i = 0; i < this->M; i++) {
         if (st[i].chave != NULLKEY) {
             temp.insere(st[i].chave, st[i].valor);
         }
@@ -84,11 +75,50 @@ void hashTable::resize(int cap) {
     this->M = temp.M;
 }
 
-// @@@ alterar após a remoção
-bool hashTable::contains(string chave) {
-    int i = hash(chave);
-    if (st[i].chave != NULLKEY) return true;
-    return false;
+void hashTable::remove(string chave) {
+    for (int i = hash(chave); st[i].usado; i = (i + 1) % M)
+        if (chave == st[i].chave) {
+            st[i].chave = NULLKEY;
+            N--;
+            return;
+        }
+}
+
+int hashTable::rank(string chave) {
+    string arr[N];
+    int j = 0;
+    for (int i = 0; i < M; i++) {
+        if (st[i].chave != NULLKEY) {
+            arr[j] = st[i].chave;
+            j++;
+        }
+    }
+    quicksort<string>(arr, 0, N);
+    int ini = 0, fim = N - 1;
+    while (ini <= fim) {
+        int meio = ini + (fim - ini)/2;
+        if (chave < arr[meio])
+            fim = meio - 1;
+        else if (chave > arr[meio])
+            ini = meio + 1;
+        else
+            return meio;
+    }
+    return ini;
+}
+
+string hashTable::seleciona(int k) {
+    if (k < 0 || k >= N) return "Erro! Rank não encontrado.";
+    int j = 0;
+    string arr[N];
+    for (int i = 0; i < M; i++) {
+        if (st[i].chave != NULLKEY) {
+            arr[j] = st[i].chave;
+            j++;
+        }
+    }
+    quicksort<string>(arr, 0, N);
+    return arr[k];
 }
 
 // código baseado em:

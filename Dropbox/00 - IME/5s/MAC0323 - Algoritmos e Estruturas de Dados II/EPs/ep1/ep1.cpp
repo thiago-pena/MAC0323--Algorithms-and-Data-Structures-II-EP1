@@ -18,9 +18,11 @@ int main() {
     ifstream f;
     f.open("texto.txt");
 
+    // vetorDes<string, int> st(NULLITEM);
+    //listaOrd<string, int> st(NULLITEM);
     //listaDes<string, int> st(NULLITEM);
     // listaDes<string, int> st();
-    hashTable st(3);
+    hashTable st;
 
     string p;
     while (f >> p) {
@@ -41,7 +43,6 @@ int main() {
         if (p == t)
             cout << "\t" << p << ", " << st.devolve(p) << endl;
     }
-    //st.print();
 
 
     cout << st.devolve("to") << endl; // 13
@@ -56,10 +57,6 @@ int main() {
     cout << st.devolve("b") << endl; // Não tem
     cout << st.devolve("c") << endl; // Não tem
     f.close();
-
-    cout << "Teste contains" << endl;
-    cout << st.contains("to") << endl;
-    cout << st.contains("blablabla") << endl;
 }
 
 

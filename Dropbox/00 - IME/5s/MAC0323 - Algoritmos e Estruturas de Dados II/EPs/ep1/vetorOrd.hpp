@@ -17,13 +17,13 @@ class vetorOrd {
         bool isEmpty();
         void resize();
     public:
-        vetorOrd(Item nullItem); // inserir nome do arquivo de texto como parâmetro
+        vetorOrd(Item nullItem);
         bool contains(Chave chave);
         void insere(Chave chave, Item valor);
-        Item devolve(Chave chave); // value paired with key ( null if key is absent)
-        //void remove (Chave chave);
-        int rank(Chave chave); // find the number of keys less than a given key
-        Chave seleciona(int k); // find the key with a given rank
+        Item devolve(Chave chave);
+        void remove (Chave chave);
+        int rank(Chave chave);
+        Chave seleciona(int k);
 };
 
 template <class Chave, class Item>
@@ -34,8 +34,6 @@ bool vetorOrd<Chave, Item>::isEmpty() {
     return n == 0;
 }
 
-
-// rank retorna onde deve inserir, se for nova
 template <class Chave, class Item>
 void vetorOrd<Chave, Item>::insere(Chave chave, Item valor) {
     int r = rank(chave);
@@ -54,7 +52,6 @@ void vetorOrd<Chave, Item>::insere(Chave chave, Item valor) {
     }
 }
 
-// value paired with key ( null if key is absent)
 template <class Chave, class Item>
 Item vetorOrd<Chave, Item>::devolve(Chave chave) {
     if (n == 0) return nullItem;
@@ -64,9 +61,6 @@ Item vetorOrd<Chave, Item>::devolve(Chave chave) {
     return nullItem;
 }
 
-// find the number of keys less than a given key
-// retorna -1 se a chave não pertence à ST
-// fazer busca binária
 template <class Chave, class Item>
 int vetorOrd<Chave, Item>::rank(Chave chave) {
     int ini = 0, fim = n - 1;
@@ -82,20 +76,10 @@ int vetorOrd<Chave, Item>::rank(Chave chave) {
     return ini;
 }
 
-// key of rank k
-// find the key with a given rank
 template <class Chave, class Item>
 Chave vetorOrd<Chave, Item>::seleciona(int k) {
-    // boolean contains(Key key) is there a value paired with key ?
+    if (k < 0 || k >= n) return "Erro! Rank não encontrado.";
     return st[k].chave;
-
-/*
-    When a method is to return a key and there is no key fitting the de-
-    scription in the table, our convention is to throw an exception (an alternate approach,
-    which is also reasonable, would be to return null in such cases). For example, min() ,
-    max() , deleteMin() , deleteMax() , floor() , and ceiling() all throw exceptions if
-    the table is empty, as does select(k) if k is less than 0 or not less than size() .
-*/
 }
 
 template <class Chave, class Item>
@@ -113,9 +97,20 @@ void vetorOrd<Chave, Item>::resize() {
         novoVetor[i].chave = st[i].chave;
         novoVetor[i].valor = st[i].valor;
     }
-    delete [] st;
     st = novoVetor;
     size *= 2;
+}
+
+template <class Chave, class Item>
+void vetorOrd<Chave, Item>::remove(Chave chave) {
+    bool achou = false;
+    int i = rank(chave);
+    if (chave != st[i].chave) return; // chave não pertence à ST
+    while (i < n - 1) {
+        st[i] = st[i + 1];
+        i++;
+    }
+    n--;
 }
 
 #endif
