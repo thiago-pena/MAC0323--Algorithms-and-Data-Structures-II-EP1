@@ -353,6 +353,11 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
                         sobrinhoPerto = irmao->dir;
                         sobrinhoLonge = irmao->esq;
                     }
+                    if (DEBUG) {
+                        cout << "sobrinhoLonge: " << sobrinhoLonge->chave << endl;
+                        cout << "sobrinhoLonge->pai: " << sobrinhoLonge->pai->chave << endl;
+                        cout << "irmao: " << irmao->chave << endl;
+                    }
                 }
                 // Caso 2.4. Irmão preto, sobrinho mais longe vermelho [Folha]
                 if (sobrinhoLonge != nullptr && sobrinhoLonge->cor == 0) {
@@ -370,23 +375,23 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
                     else { // pai era raiz
                         this->raiz = irmao; // nova raiz
                     }
-                    if (pai == node) node = irmao; // corrige a refêrencia a node após a rotação
+                    if (pai == node) {node = irmao; // corrige a refêrencia a node após a rotação
+                    }
 
                     irmao->pai = pai->pai;
                     if (DEBUG) cout << "\t\t\tpEsquerda: " << pEsquerda << endl;
                     if (pEsquerda) {
                         pai->dir = sobrinhoPerto;
-                        sobrinhoPerto->pai = pai;
+                        if (sobrinhoPerto != nullptr) sobrinhoPerto->pai = pai;
                         irmao->esq = pai;
                         pai->pai = irmao;
                     }
                     else {
                         pai->esq = sobrinhoPerto;
-                        sobrinhoPerto->pai = pai;
+                        if (sobrinhoPerto != nullptr) sobrinhoPerto->pai = pai;
                         irmao->dir = pai;
                         pai->pai = irmao;
                     }
-
                     if (DEBUG) {
                         cout << "\t\t\t\tp: " << p->chave << endl;
                         cout << "\t\t\t\tirmao: " << irmao->chave << endl;
@@ -404,12 +409,15 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
                     delete aux;
 
 
-                    cout << "PRINT interno" << endl;
-                    this->print();
+                    if (DEBUG) {
+                        cout << "PRINT interno" << endl;
+                        this->print();
+                    }
                 }
             }
             else { // irmão vermelho
                 cout << "\t\t irmão é vermelho" << endl;
+                if ()
                 pai->cor = 0;
                 irmao->cor = 1;
                 if (pai->pai != nullptr) { // mantém o ponteiro do pai->pai durante a rotação
@@ -433,6 +441,7 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
                 else {
                     pai->esq = irmao->dir;
                     if (irmao->dir != nullptr) irmao->dir->pai = pai;
+                    /////////
                     irmao->dir = pai;
                     pai->pai = irmao;
                     pai->dir = nullptr;
@@ -477,7 +486,7 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
         if (DEBUG) {
             cout << "PRINT loop de subida" << endl;
             this->print();
-            cout << "-------------" << endl;
+            cout << "-------------abc" << endl;
             cout << "p: " << p->chave << endl;
             cout << "p->cor: " << p->cor << endl;
             cout << "node: " << node->chave << endl;
@@ -551,7 +560,16 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
                         sobrinhoPerto->esq = irmao;
                         irmao->pai = sobrinhoPerto;
                     }
-                    // mantém o 'p', porque cai no caso 2.4
+                    // mantém o 'p', porque cai no caso 2.4 -> não precisa remover agora, 'p' é quem vai tentar remover no 2.4
+                    irmao = sobrinhoPerto;
+                    if (pEsquerda) { // recalcula os sobrinhos para cair no caso 2.4
+                        sobrinhoPerto = irmao->esq;
+                        sobrinhoLonge = irmao->dir;
+                    }
+                    else {
+                        sobrinhoPerto = irmao->dir;
+                        sobrinhoLonge = irmao->esq;
+                    }
                 }
                 // Caso 2.4. Irmão preto, sobrinho mais longe vermelho
                 if (sobrinhoLonge != nullptr && sobrinhoLonge->cor == 0) {
@@ -573,13 +591,13 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
 
                     if (pEsquerda) {
                         pai->dir = sobrinhoPerto;
-                        sobrinhoPerto->pai = pai;
+                        if (sobrinhoPerto != nullptr) sobrinhoPerto->pai = pai;
                         irmao->esq = pai;
                         pai->pai = irmao;
                     }
                     else {
                         pai->esq = sobrinhoPerto;
-                        sobrinhoPerto->pai = pai;
+                        if (sobrinhoPerto != nullptr) sobrinhoPerto->pai = pai;
                         irmao->dir = pai;
                         pai->pai = irmao;
                     }
@@ -707,7 +725,7 @@ void arvoreRN<Chave, Item>::printR(No *node) {
     if (node != nullptr) {
         cout << node->chave << ": " << node->valor << " (" << node->getCor() << ")";
         if (node->pai == nullptr) cout << " raiz" << endl;
-        else cout << "| pai: " << node->pai->chave << endl;
+        else cout << "| pai: " << node->pai->chave << "(" << node->pai->getCor() << ")" << endl;
         printR(node->esq);
         printR(node->dir);
     }

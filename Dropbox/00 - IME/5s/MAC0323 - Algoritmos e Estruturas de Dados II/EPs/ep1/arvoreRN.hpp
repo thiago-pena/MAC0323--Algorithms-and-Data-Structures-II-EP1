@@ -2,7 +2,6 @@
 #define ARVORERN_HPP
 #include <iostream>
 #include <string>
-#define DEBUG true
 
 
 template <class Chave, class Item>
@@ -201,14 +200,7 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
 
     if (chave != p->chave) return node;
 
-    if (DEBUG) {
-        cout << "achou: " << achou << endl;
-        cout << "\tp: " << p->chave << endl;
-        cout << "\tp->cor: " << p->cor << endl;
-    }
-
     if (p->cor == 0) { // p é vermelho
-        if (DEBUG) cout << "\t: " << "p é vermelho" << endl;
         if (p->esq == nullptr && p->dir == nullptr) { // p é folha
             if (p == node) { // p é raiz da sub-árvore
                 delete p;
@@ -237,17 +229,13 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
         //return node; // @@@ Pode quebrar algo acima
     }
     else if (p->cor == 1) { // p é preto
-        if (DEBUG) cout << "\tp é preto" << endl;
 
         if (p->esq == nullptr && p->dir == nullptr) { // p é folha
-            if (DEBUG) cout << "\t\tp é folha preta" << endl;
             // cria um duplo preto
             if (p == node) { // p é raiz da sub-árvore
-                cout << "\tp é raiz" << endl;
                 delete p;
                 return nullptr;
             }
-            if (DEBUG) cout << "\tp não é raiz" << endl;
 
             // p não é raiz
             No *irmao;
@@ -263,48 +251,20 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
             }
 
             if (irmao->cor == 1) { // irmão preto
-                if (DEBUG) cout << "\t\t irmão é preto" << endl;
                 // Caso 2.1. (Folha) Irmão preto com filhos pretos (ou NULLs)
                 if ((irmao->esq == nullptr || irmao->esq->cor == 1) &&
                     (irmao->dir == nullptr || irmao->dir->cor == 1))
                 {
-                    if (DEBUG) cout << "\t\t\t(Caso 2.1 folha) tem filhos pretos (ou ambos NULL)" << endl;
                     irmao->cor = 0;
                     No *pai = p->pai;
-                    if (DEBUG) {
-                        cout << "\t\t\t\tp: " << p->chave << endl;
-                        cout << "\t\t\t\tirmao: " << irmao->chave << endl;
-                        cout << "\t\t\t\tpai: " << pai->chave << endl;
-                        if (pai->esq == nullptr) cout << "\t\t\t\tpai->esq == nullptr" << endl;
-                        if (pai->dir == nullptr) cout << "\t\t\t\tpai->dir == nullptr" << endl;
-                    }
-                    cout << "------------------------------------------" << endl;
                     pai->duploPreto(); // empurra o DP para o pai
                     if (pai->esq == p) pai->esq = nullptr;
                     else if (pai->dir == p) pai->dir = nullptr;
                     No *aux = p;
-                    if (DEBUG) {
-                        cout << "\t\t\t\tp: " << p->chave << endl;
-                        cout << "\t\t\t\tirmao: " << irmao->chave << endl;
-                        cout << "\t\t\t\tpai: " << pai->chave << endl;
-                        if (pai->esq == nullptr) cout << "\t\t\t\tpai->esq == nullptr" << endl;
-                        if (pai->dir == nullptr) cout << "\t\t\t\tpai->dir == nullptr" << endl;
-                    }
-                    cout << "------------------------------------------" << endl;
 
 
                     p = p->pai; // Tratar o pai na subida
                     delete aux;
-
-                    if (DEBUG) {
-                        cout << "\t\t\t\tp: " << p->chave << endl;
-                        cout << "\t\t\t\tirmao: " << irmao->chave << endl;
-                        cout << "\t\t\t\tpai: " << pai->chave << endl;
-                        if (pai->esq == nullptr) cout << "\t\t\t\tpai->esq == nullptr" << endl;
-                        if (pai->dir == nullptr) cout << "\t\t\t\tpai->dir == nullptr" << endl;
-                        else cout << "\t\t\t\tpai->dir : " << pai->dir->chave << endl;
-                    }
-
                 }
 
                 No *sobrinhoPerto;
@@ -323,10 +283,8 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
                 if ((sobrinhoPerto != nullptr && sobrinhoPerto->cor == 0) &&
                     (sobrinhoLonge == nullptr || sobrinhoLonge->cor == 1))
                 {
-                    if (DEBUG) cout << "\t\t\t(Caso 2.3 folha) sobrinho mais perto vermelho, mais longe preto" << endl;
                     irmao->cor = 0;
                     sobrinhoPerto->cor = 1;
-                    if (DEBUG) cout << "\t\t\tpEsquerda: " << pEsquerda << endl;
                     if (pEsquerda) {
                         pai->dir = sobrinhoPerto;
                         sobrinhoPerto->pai = pai;
@@ -353,15 +311,9 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
                         sobrinhoPerto = irmao->dir;
                         sobrinhoLonge = irmao->esq;
                     }
-                    if (DEBUG) {
-                        cout << "sobrinhoLonge: " << sobrinhoLonge->chave << endl;
-                        cout << "sobrinhoLonge->pai: " << sobrinhoLonge->pai->chave << endl;
-                        cout << "irmao: " << irmao->chave << endl;
-                    }
                 }
                 // Caso 2.4. Irmão preto, sobrinho mais longe vermelho [Folha]
                 if (sobrinhoLonge != nullptr && sobrinhoLonge->cor == 0) {
-                    if (DEBUG) cout << "\t\t\t(Caso 2.4 folha) sobrinho mais longe vermelho" << endl;
                     int corAux = pai->cor;
                     pai->cor = irmao->cor;
                     irmao->cor = corAux;
@@ -379,7 +331,6 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
                     }
 
                     irmao->pai = pai->pai;
-                    if (DEBUG) cout << "\t\t\tpEsquerda: " << pEsquerda << endl;
                     if (pEsquerda) {
                         pai->dir = sobrinhoPerto;
                         if (sobrinhoPerto != nullptr) sobrinhoPerto->pai = pai;
@@ -392,14 +343,6 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
                         irmao->dir = pai;
                         pai->pai = irmao;
                     }
-                    if (DEBUG) {
-                        cout << "\t\t\t\tp: " << p->chave << endl;
-                        cout << "\t\t\t\tirmao: " << irmao->chave << endl;
-                        cout << "\t\t\t\tpai: " << pai->chave << endl;
-                        if (pai->esq == nullptr) cout << "\t\t\t\tpai->esq == nullptr" << endl;
-                        if (pai->dir == nullptr) cout << "\t\t\t\tpai->dir == nullptr" << endl;
-                        else cout << "\t\t\t\tpai->dir : " << pai->dir->chave << endl;
-                    }
 
                     sobrinhoLonge->duploPreto(); // p passa DP para sobrinhoLonge
                     if (pai->esq == p) pai->esq = nullptr; // acerta ponteiros do pai para remoção de p
@@ -407,16 +350,9 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
                     No *aux = p;
                     p = irmao; // corrigiu tudo até aqui (irmao --> novo pai após a rotação)
                     delete aux;
-
-
-                    if (DEBUG) {
-                        cout << "PRINT interno" << endl;
-                        this->print();
-                    }
                 }
             }
-            else { // irmão vermelho
-                cout << "\t\t irmão é vermelho" << endl;
+            else { // irmão vermelho (Caso 2.2 Folha)
                 pai->cor = 0;
                 irmao->cor = 1;
                 if (pai->pai != nullptr) { // mantém o ponteiro do pai->pai durante a rotação
@@ -440,6 +376,7 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
                 else {
                     pai->esq = irmao->dir;
                     if (irmao->dir != nullptr) irmao->dir->pai = pai;
+                    /////////
                     irmao->dir = pai;
                     pai->pai = irmao;
                     pai->dir = nullptr;
@@ -451,21 +388,14 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
         }
         else {
             // p não é folha
-            if (DEBUG) {
-                cout << "\t\tpreto | p não é folha" << endl;
-                cout << "\t\t\tp: " << p->chave << endl;
-                cout << "\t\t\tp->cor: " << p->cor << endl;
-            }
             // trocar com uma folha e remover a folha
             if (p->esq != nullptr) {
-                if (DEBUG) cout << "\t\t\tif (p->esq != nullptr)" << endl;
                 No *aux = max(p->esq);
                 p->chave = aux->chave;
                 p->valor = aux->valor;
                 p->esq = removeRN(p->esq, aux->chave);
             }
             else {
-                if (DEBUG) cout << "\t\t\telse" << endl;
                 No *aux = min(p->dir);
                 p->chave = aux->chave;
                 p->valor = aux->valor;
@@ -480,16 +410,6 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
             // raiz
             // não raiz
     while (p != nullptr) {
-        cout << "w1" << endl;
-        if (DEBUG) {
-            cout << "PRINT loop de subida" << endl;
-            this->print();
-            cout << "-------------abc" << endl;
-            cout << "p: " << p->chave << endl;
-            cout << "p->cor: " << p->cor << endl;
-            cout << "node: " << node->chave << endl;
-            cout << "node->cor" << node->cor << endl;
-        }
         if (p->cor < 2)
             return node;
         else { // p é duplo preto
@@ -512,12 +432,10 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
 
             // p é DP + Irmão preto com filhos pretos/NULLs
             if (irmao->cor == 1) { // irmão preto
-                cout << "\t\t(up) p é dp + irmão é preto" << endl;
                 // Caso 2.1. Irmão preto com filhos pretos (ou NULLs) v2
                 if ((irmao->esq == nullptr || irmao->esq->cor == 1) &&
                     (irmao->dir == nullptr || irmao->dir->cor == 1))
                 {
-                    cout << "\t\t\t tem filhos pretos (ou ambos NULL)" << endl;
                     irmao->cor = 0;
                     No *pai = p->pai;
                     pai->duploPreto(); // empurra o DP para o pai
