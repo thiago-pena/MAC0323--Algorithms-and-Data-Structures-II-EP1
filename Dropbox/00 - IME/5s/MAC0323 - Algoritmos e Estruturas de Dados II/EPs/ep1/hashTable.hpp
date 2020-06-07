@@ -1,14 +1,20 @@
 #ifndef HASHTABLE_HPP
 #define HASHTABLE_HPP
-#define NULLKEY "NULL"
+
+//Tamanho padrão da HT, usando um número primo.
+// Caso necessário, a HT é redimensionada automaticamente
+// com o primeiro primo >= 2 ao atual.
 #define INITIALPRIME 151
+
+#define NULLKEY "NULL"
+#define NULLITEM -1
 
 int nextPrime(int n);
 bool isPrime(int n);
 
 class hashTable {
     public:
-        hashTable(int tam = INITIALPRIME);
+        hashTable(string nome_arquivo, int tam = INITIALPRIME);
         void insere(string chave, int valor);
         int devolve(string chave);
         void remove(string chave);
@@ -28,11 +34,34 @@ class hashTable {
         void resize(int);
 };
 
-hashTable::hashTable(int tam): st(new par[tam]), N(0), M(tam) {
+hashTable::hashTable(string nome_arquivo, int tam): st(new par[tam]), N(0), M(tam)
+{
     for (int i = 0; i < M; i++) {
         st[i].chave = NULLKEY;
         st[i].usado = false;
     }
+
+    if(nome_arquivo == NULLKEY) return;
+    regex e {"[_[:punct:]]"};
+    ifstream f;
+    f.open(nome_arquivo);
+
+    string p;
+    while (f >> p) {
+        p = regex_replace(p, e, "");
+        if (p == "") continue;
+        for (int i = 0; (unsigned)i < p.length(); i++)
+            p[i] = tolower(p[i]);
+
+        int count = devolve(p);
+
+        if (count == NULLITEM)
+            insere(p, 1);
+        else
+            insere(p, ++count);
+    }
+
+    f.close();
 }
 
 int hashTable::hash(string s) {
@@ -61,11 +90,11 @@ int hashTable::devolve(string chave) {
     for (int i = hash(chave); st[i].usado; i = (i + 1) % M)
         if (chave == st[i].chave)
             return st[i].valor;
-    return -1;
+    return NULLITEM;
 }
 
 void hashTable::resize(int cap) {
-    hashTable temp(cap);
+    hashTable temp(NULLKEY, cap);
     for (int i = 0; i < this->M; i++) {
         if (st[i].chave != NULLKEY) {
             temp.insere(st[i].chave, st[i].valor);
@@ -108,7 +137,7 @@ int hashTable::rank(string chave) {
 }
 
 string hashTable::seleciona(int k) {
-    if (k < 0 || k >= N) return "Erro! Rank não encontrado.";
+    if (k < 0 || k >= N) return NULLKEY;
     int j = 0;
     string arr[N];
     for (int i = 0; i < M; i++) {

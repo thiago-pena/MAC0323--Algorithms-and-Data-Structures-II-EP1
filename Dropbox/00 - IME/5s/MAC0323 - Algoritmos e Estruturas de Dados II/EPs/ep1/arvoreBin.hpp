@@ -4,7 +4,7 @@
 template <class Chave, class Item>
 class arvoreBin {
     public:
-        arvoreBin(Item nullItem);
+        arvoreBin(string nome_arquivo, Item nullItem, Chave nullKey);
         bool contains(Chave chave);
         void insere(Chave chave, Item valor);
         Item devolve(Chave chave);
@@ -26,6 +26,7 @@ class arvoreBin {
         };
         No *raiz;
         Item nullItem;
+        Chave nullKey;
         No * insereR(No*, Chave, Item);
         Item devolveR(No*, Chave);
         bool containsR(No*, Chave);
@@ -37,7 +38,29 @@ class arvoreBin {
 };
 
 template <class Chave, class Item>
-arvoreBin<Chave, Item>::arvoreBin(Item nullItem): raiz(nullptr), nullItem(nullItem){};
+arvoreBin<Chave, Item>::arvoreBin(string nome_arquivo, Item nullItem, Chave nullKey): raiz(nullptr), nullItem(nullItem), nullKey(nullKey)
+{
+    regex e {"[_[:punct:]]"};
+    ifstream f;
+    f.open(nome_arquivo);
+
+    string p;
+    while (f >> p) {
+        p = regex_replace(p, e, "");
+        if (p == "") continue;
+        for (int i = 0; (unsigned)i < p.length(); i++)
+            p[i] = tolower(p[i]);
+
+        int count = devolve(p);
+
+        if (count == nullItem)
+            insere(p, 1);
+        else
+            insere(p, ++count);
+    }
+
+    f.close();
+};
 
 template <class Chave, class Item>
 void arvoreBin<Chave, Item>::insere(Chave chave, Item valor) {
@@ -174,7 +197,7 @@ Chave arvoreBin<Chave, Item>::seleciona(int k) {
     selecionaR(raiz, k, achou, ch, 0);
     if (achou)
         return ch;
-    return "Erro! Rank não encontrado.";
+    return nullKey;
 }
 
 // in ordem

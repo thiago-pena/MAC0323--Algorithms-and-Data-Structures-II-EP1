@@ -23,10 +23,11 @@ class vetorDes {
         int size; // tamanho de vetor
         int n;
         Item nullItem;
+        Chave nullKey;
         bool null(Chave chave);
         void resize();
     public:
-        vetorDes(Item nullItem);
+        vetorDes(string nome_arquivo, Item nullItem, Chave nullKey);
         void insere(Chave chave, Item valor);
         Item devolve(Chave chave);
         void remove (Chave chave);
@@ -35,7 +36,28 @@ class vetorDes {
 };
 
 template <class Chave, class Item>
-vetorDes<Chave, Item>::vetorDes(Item nullItem): st(new par[2]), size(2), n(0), nullItem(nullItem) {}
+vetorDes<Chave, Item>::vetorDes(string nome_arquivo, Item nullItem, Chave nullKey): st(new par[2]), size(2), n(0), nullItem(nullItem), nullKey(nullKey) {
+    regex e {"[_[:punct:]]"};
+    ifstream f;
+    f.open(nome_arquivo);
+
+    string p;
+    while (f >> p) {
+        p = regex_replace(p, e, "");
+        if (p == "") continue;
+        for (int i = 0; (unsigned)i < p.length(); i++)
+            p[i] = tolower(p[i]);
+
+        int count = devolve(p);
+
+        if (count == nullItem)
+            insere(p, 1);
+        else
+            insere(p, ++count);
+    }
+
+    f.close();
+}
 
 template <class Chave, class Item>
 void vetorDes<Chave, Item>::insere(Chave chave, Item valor) {
@@ -110,7 +132,7 @@ void vetorDes<Chave, Item>::remove(Chave chave) {
 
 template <class Chave, class Item>
 Chave vetorDes<Chave, Item>::seleciona(int k) {
-    if (k < 0 || k >= n) return "Erro! Rank não encontrado.";
+    if (k < 0 || k >= n) return nullKey;
     Chave arr[n];
     for (int i = 0; i < n; i++) {
         arr[i] = st[i].chave;

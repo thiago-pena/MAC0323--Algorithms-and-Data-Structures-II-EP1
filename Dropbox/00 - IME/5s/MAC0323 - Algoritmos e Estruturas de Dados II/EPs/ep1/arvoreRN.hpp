@@ -7,7 +7,7 @@
 template <class Chave, class Item>
 class arvoreRN {
     public:
-        arvoreRN(Item nullItem);
+        arvoreRN(string nome_arquivo, Item nullItem, Chave nullKey);
         bool contains(Chave chave);
         void insere(Chave chave, Item valor);
         Item devolve(Chave chave);
@@ -39,6 +39,7 @@ class arvoreRN {
         };
         No *raiz;
         Item nullItem;
+        Chave nullKey;
         Item devolveR(No*, Chave);
         bool containsR(No*, Chave);
         int rankR(No*, Chave);
@@ -51,7 +52,29 @@ class arvoreRN {
 };
 
 template <class Chave, class Item>
-arvoreRN<Chave, Item>::arvoreRN(Item nullItem): raiz(nullptr), nullItem(nullItem){};
+arvoreRN<Chave, Item>::arvoreRN(string nome_arquivo, Item nullItem, Chave nullKey): raiz(nullptr), nullItem(nullItem), nullKey(nullKey)
+{
+    regex e {"[_[:punct:]]"};
+    ifstream f;
+    f.open(nome_arquivo);
+
+    string p;
+    while (f >> p) {
+        p = regex_replace(p, e, "");
+        if (p == "") continue;
+        for (int i = 0; (unsigned)i < p.length(); i++)
+            p[i] = tolower(p[i]);
+
+        int count = devolve(p);
+
+        if (count == nullItem)
+            insere(p, 1);
+        else
+            insere(p, ++count);
+    }
+
+    f.close();
+};
 
 template <class Chave, class Item>
 void arvoreRN<Chave, Item>::insere(Chave chave, Item valor) {
@@ -99,7 +122,7 @@ void arvoreRN<Chave, Item>::insere(Chave chave, Item valor) {
         No *tio; // outro filho do avô
         if (avo->esq == p)
             tio = avo->dir;
-        else if (avo->dir = p)
+        else if (avo->dir == p)
             tio = avo->esq;
 
 
@@ -556,7 +579,7 @@ typename arvoreRN<Chave, Item>::No* arvoreRN<Chave, Item>::removeRN(No *node, Ch
 
         }
     }
-
+    return node;
 }
 
 template <class Chave, class Item>
@@ -649,7 +672,7 @@ Chave arvoreRN<Chave, Item>::seleciona(int k) {
     selecionaR(raiz, k, achou, ch, 0);
     if (achou)
         return ch;
-    return "Erro! Rank não encontrado.";
+    return nullKey;
 }
 
 template <class Chave, class Item>

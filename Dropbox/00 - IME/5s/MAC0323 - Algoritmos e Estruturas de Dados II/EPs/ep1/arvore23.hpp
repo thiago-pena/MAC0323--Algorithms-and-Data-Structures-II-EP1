@@ -4,7 +4,7 @@
 template <class Chave, class Item>
 class arvore23 {
     public:
-        arvore23(Item nullItem);
+        arvore23(string nome_arquivo, Item nullItem, Chave nullKey);
         void insere(Chave chave, Item valor);
         Item devolve(Chave chave);
         void remove (Chave chave);
@@ -36,6 +36,7 @@ class arvore23 {
         };
         No *raiz;
         Item nullItem;
+        Chave nullKey;
         No * put23(No *, Chave, Item, bool &);
         Item get23(No *, Chave);
         int rankR(No*, Chave);
@@ -48,7 +49,29 @@ class arvore23 {
 };
 
 template <class Chave, class Item>
-arvore23<Chave, Item>::arvore23(Item nullItem): raiz(nullptr), nullItem(nullItem) {};
+arvore23<Chave, Item>::arvore23(string nome_arquivo, Item nullItem, Chave nullKey): raiz(nullptr), nullItem(nullItem), nullKey(nullKey)
+{
+    regex e {"[_[:punct:]]"};
+    ifstream f;
+    f.open(nome_arquivo);
+
+    string p;
+    while (f >> p) {
+        p = regex_replace(p, e, "");
+        if (p == "") continue;
+        for (int i = 0; (unsigned)i < p.length(); i++)
+            p[i] = tolower(p[i]);
+
+        int count = devolve(p);
+
+        if (count == nullItem)
+            insere(p, 1);
+        else
+            insere(p, ++count);
+    }
+
+    f.close();
+};
 
 template <class Chave, class Item>
 void arvore23<Chave, Item>::insere(Chave chave, Item valor) {
@@ -937,7 +960,7 @@ Chave arvore23<Chave, Item>::seleciona(int k) {
     selecionaR(raiz, k, achou, ch, 0);
     if (achou)
         return ch;
-    return "Erro! Rank não encontrado.";
+    return nullKey;
 }
 
 // in ordem

@@ -5,46 +5,19 @@
 #include "vetorDes.hpp"
 #include "vetorOrd.hpp"
 #include "listaDes.hpp"
+#include "listaOrd.hpp"
+#include "arvoreBin.hpp"
+#include "treap.hpp"
+#include "arvore23.hpp"
+#include "arvoreRN.hpp"
 #include "hashTable.hpp"
 using namespace std;
 
 #define NULLITEM -1
-
-string minuscula(string s);
-
+#define NULLKEY "NULL"
 
 int main() {
-    regex e {"[_[:punct:]]"};
-    ifstream f;
-    f.open("texto.txt");
-
-    // vetorDes<string, int> st(NULLITEM);
-    //listaOrd<string, int> st(NULLITEM);
-    //listaDes<string, int> st(NULLITEM);
-    // listaDes<string, int> st();
-    hashTable st;
-
-    string p;
-    while (f >> p) {
-        p = regex_replace(p, e, "");
-        if (p == "") continue;
-        p = minuscula(p);
-
-        int count = st.devolve(p);
-
-        string t = "to";
-        if (p == t)
-            cout << p << ", " << count << endl;
-        if (count == NULLITEM)
-            st.insere(p, 1);
-        else
-            st.insere(p, ++count);
-
-        if (p == t)
-            cout << "\t" << p << ", " << st.devolve(p) << endl;
-    }
-
-
+    vetorDes<string, int> st("texto.txt", NULLITEM, NULLKEY);
     cout << st.devolve("to") << endl; // 13
     cout << st.devolve("has") << endl; // 6
     cout << st.devolve("that") << endl; // 2
@@ -56,12 +29,31 @@ int main() {
     cout << st.devolve("a") << endl; // 4
     cout << st.devolve("b") << endl; // Não tem
     cout << st.devolve("c") << endl; // Não tem
-    f.close();
 }
 
-
-string minuscula(string s) {
-    for (int i = 0; (unsigned)i < s.length(); i++)
-        s[i] = tolower(s[i]);
-    return s;
-}
+// int criaTabela(string arquivo) {
+//     regex e {"[_[:punct:]]"};
+//     ifstream f;
+//     f.open(arquivo);
+//
+//     vetorDes<string, int> st(NULLITEM);
+//     listaOrd<string, int> st(NULLITEM);
+//     listaDes<string, int> st(NULLITEM);
+//     hashTable st;
+//
+//     string p;
+//     while (f >> p) {
+//         p = regex_replace(p, e, "");
+//         if (p == "") continue;
+//         p = minuscula(p);
+//
+//         int count = st.devolve(p);
+//
+//         if (count == NULLITEM)
+//             st.insere(p, 1);
+//         else
+//             st.insere(p, ++count);
+//     }
+//
+//     f.close();
+// }

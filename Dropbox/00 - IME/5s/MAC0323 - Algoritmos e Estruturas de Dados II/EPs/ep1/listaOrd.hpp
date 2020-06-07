@@ -5,7 +5,7 @@ using namespace std;
 template <class Chave, class Item>
 class listaOrd {
     public:
-        listaOrd(Item nullItem);
+        listaOrd(string nome_arquivo, Item nullItem, Chave nullKey);
         bool contains(Chave chave);
         void insere(Chave chave, Item valor);
         Item devolve(Chave chave);
@@ -28,10 +28,33 @@ class listaOrd {
         No *ini;
         int n; // número de elementos na Tabela de Símbolos
         Item nullItem;
+        Chave nullKey;
 };
 
 template <class Chave, class Item>
-listaOrd<Chave, Item>::listaOrd(Item nullItem): ini(nullptr), n(0), nullItem(nullItem) {};
+listaOrd<Chave, Item>::listaOrd(string nome_arquivo, Item nullItem, Chave nullKey): ini(nullptr), n(0), nullItem(nullItem), nullKey(nullKey)
+{
+    regex e {"[_[:punct:]]"};
+    ifstream f;
+    f.open(nome_arquivo);
+
+    string p;
+    while (f >> p) {
+        p = regex_replace(p, e, "");
+        if (p == "") continue;
+        for (int i = 0; (unsigned)i < p.length(); i++)
+            p[i] = tolower(p[i]);
+
+        int count = devolve(p);
+
+        if (count == nullItem)
+            insere(p, 1);
+        else
+            insere(p, ++count);
+    }
+
+    f.close();
+};
 
 template <class Chave, class Item>
 void listaOrd<Chave, Item>::insere(Chave chave, Item valor) {
@@ -104,11 +127,12 @@ bool listaOrd<Chave, Item>::contains(Chave chave) {
 
 template <class Chave, class Item>
 Chave listaOrd<Chave, Item>::seleciona(int k) {
-    if (k < 0 || k >= n) return "Erro! Rank não encontrado.";
+    if (k < 0 || k >= n) return nullKey;
     int i = 0;
     for (No *x = ini; x != nullptr; x = x->next, i++) {
         if (i == k) return x->chave;
     }
+    return nullKey;
 }
 
 template <class Chave, class Item>

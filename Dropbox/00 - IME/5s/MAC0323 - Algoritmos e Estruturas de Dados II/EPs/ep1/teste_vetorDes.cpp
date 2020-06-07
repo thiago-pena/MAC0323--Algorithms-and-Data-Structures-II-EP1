@@ -13,6 +13,7 @@
 using namespace std;
 
 #define NULLITEM -1
+#define NULLIKEY "NULL"
 
 int main() {
     regex e {"[_[:punct:]]"};
@@ -25,15 +26,16 @@ int main() {
     cout << s << endl;
 
 
-    // vetorDes<string, int> st(NULLITEM);
+    vetorDes<string, int> st("texto.txt", NULLITEM, NULLKEY);
     // vetorOrd<string, int> st(NULLITEM);
     // listaDes<string, int> st(NULLITEM);
     //listaOrd<string, int> st(NULLITEM);
     //treap<string, int> st(NULLITEM);
     //arvoreBin<string, int> st(NULLITEM);
-    hashTable st;
+    // hashTable st;
     // hashTable st(151);
 
+    cout << "Rank account: " << st.rank("account") << endl;
 
     cout << "\nTeste 1 - inserir elementos1\n";
     st.insere("s05", 3);
@@ -45,6 +47,12 @@ int main() {
     st.insere("s06", 6);
     st.insere("s01", 1);
 
+    st.insere("aaa", 1);
+
+
+    cout << "Rank account: " << st.rank("account") << endl;
+
+
     cout << "\nTeste 2 - Devolve\n";
     cout << "Devolve 01: " << st.devolve("s01") << endl;
     cout << "Devolve 02: " << st.devolve("s02") << endl;
@@ -54,6 +62,9 @@ int main() {
     cout << "Devolve 06: " << st.devolve("s06") << endl;
     cout << "Devolve 07: " << st.devolve("s07") << endl;
 
+    cout << "Rank account: " << st.rank("account") << endl;
+
+
     cout << "\nTeste 3 - Rank\n";
     cout << "Rank 01: " << st.rank("s01") << endl; // r 0
     cout << "Rank 02: " << st.rank("s02") << endl; // r 1
@@ -62,6 +73,8 @@ int main() {
     cout << "Rank 05: " << st.rank("s05") << endl; // r 3
     cout << "Rank 06: " << st.rank("s06") << endl; // r 4
     cout << "Rank 07: " << st.rank("s07") << endl; // r 5
+    cout << "Rank account: " << st.rank("account") << endl;
+    
 
     cout << "\nTeste 4 - Seleciona\n";
     cout << "Seleciona 0: " << st.seleciona(0) << endl;
