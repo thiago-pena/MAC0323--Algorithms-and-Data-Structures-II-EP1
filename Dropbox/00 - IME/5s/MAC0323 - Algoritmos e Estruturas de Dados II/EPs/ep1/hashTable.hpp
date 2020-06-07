@@ -37,7 +37,7 @@ hashTable::hashTable(int tam): st(new par[tam]), N(0), M(tam) {
 
 int hashTable::hash(string s) {
     int h = 0;
-    for (int i = 0; i < s.length(); i++)
+    for (int i = 0; (unsigned)i < s.length(); i++)
         h = (31 * h + s[i]) % M;
     return h;
 }

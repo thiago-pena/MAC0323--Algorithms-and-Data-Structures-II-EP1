@@ -61,7 +61,7 @@ int main() {
 
 
 string minuscula(string s) {
-    for (int i = 0; i < s.length(); i++)
+    for (int i = 0; (unsigned)i < s.length(); i++)
         s[i] = tolower(s[i]);
     return s;
 }
