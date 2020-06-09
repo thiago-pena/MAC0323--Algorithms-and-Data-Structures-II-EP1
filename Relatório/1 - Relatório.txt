@@ -1,0 +1,73 @@
+Nome: Thiago Jose Benitez Pena
+nUSP: 6847829
+
+----------------- Compilando o EP1 -----------------
+g++ -std=c++11 -Wall -g -O0 unit_test.cpp util.cpp -o ep1
+
+----------------- Executando um arquivo -----------------
+Segui a interface fornecida, ou seja:
+- para executar um arquivo:
+    ./ep1 [nome do arquivo] [modo]
+
+- onde modo pode ser: VD, VO, LD, LO, AB, TR, A23, RN, HS
+
+----------------- Testes -----------------
+Livros utilizados:
+1. Dom Casmurro
+2. Shakespeare (Obra completa)
+3. Lusíadas
+4. Lorem ipsum (texto gerado aleatoriamente) com 10 parágrafos
+5. Lorem ipsum (texto gerado aleatoriamente) com 100 parágrafos
+6. Lorem ipsum (texto gerado aleatoriamente) com 1000 parágrafos
+7. Lorem ipsum (texto gerado aleatoriamente) com 9999 parágrafos
+
+Os textos foram executados 3 vezes para cada estrutura de dados, exceto nos
+casos em que demoraram demais (por exemplo, as listas ligadas na obra completa
+de Shakespeare, que demoraram mais de 20 minutos).
+
+Os resultados medidos estão nas imagens contidas na pasta Relatório.
+
+----------------- Resultados -----------------
+Em todos os casos o melhor desempenho foi de HashTable.
+Nos livros, os tempos de execução seguiram a seguinte ordem:
+    HS < RN < A23 < AB < TR < VO < VD < LD < LO
+
+Já nos textos gerados automaticamente, descontando algumas variações, a ordem foi:
+    HS < VO < RN < A23 < TR < AB < VD < LD < LO
+
+É notável a diferença da HashTable e das estruturas de árvores quando comparadas
+as listas ligadas e vetores nos livros.
+
+Porém, nos textos gerados automaticamente, a estrutura VetorOrdenado se saiu bem,
+alcançando desempenho apenas 7.2% inferior à HashTable no texto .
+Mas nos livros,  VO teve desempenho pelo menos 253% inferior à HashTable.
+
+
+
+Outras considerações:
+(Árvores Binárias X Treaps)
+Eu esperava que o treap tivesse desempenho melhor se comparado à Árvore Binária,
+mas nos testes foi Treap inferior.
+
+Esperava também que a Lista Ordenada tivesse melhor desempenho comparada à
+Lista Desordenada, mas ocorreu o inverso. Minha hipótese é que talvez as palavras
+com maior ocorrência tenham maiores chances da aparecerem primeiro, tornando sua
+busca mais rápida na Lista Desordenada.
+Esse fato não ocorre na comparação Vetor Desordenado e Vetor Ordenado pelo fato
+da busca ser binária no Vetor Ordenado.
+Essa mesma hipótese poderia também justificar o pior desempenho do Treap em relação
+à Árvore Binária. Pode ser que as rotações acabem levando chaves que tenham
+frequencias elevadas para nós mais profundos, então mesmo tendo um balanceamento
+melhor, na média acabaria tendo pior desempenho na busca.
+
+
+----------------- Observações -----------------
+- Números nos textos também estão sendo armazenados nas tabelas de símbolo por escolha minha.
+- Tive problemasa com alguns textos do Projeto Guttenberg que apresentavam um
+    caracter invisível no início. O problema era causado na HashTable, pois gerava
+    um índice negativo na função de hash. Resolvi esse comportamento colocando a
+    função módulo na função.
+- Utilizei a página do professor Paulo Feofiloff para a função de Hash em strings.
+- Utilizei a fonte abaixo com uma modificação no código para a estrutura HashTable
+    para encontrar o pŕoximo primo >= 2*(primo atual), para o resize.
+    https://www.geeksforgeeks.org/program-to-find-the-next-prime-number/
